@@ -24,10 +24,13 @@
 
         var score = 0;
 
+        var coin_sound;
+
         function preload() {
             game.load.image('jet', 'jet.png');
             game.load.image('space', 'starfield.png')
             game.load.image('coin', 'coin.png')
+            game.load.audio('coin_touch', 'metal.wav')
         }
 
         function create() {
@@ -42,6 +45,10 @@
 
             player = game.add.sprite(200, 200, 'jet');
             player.anchor.set(0.5, 0.5);
+            player.scale.setTo(2);
+
+            extra = game.add.sprite(0, 0, 'jet');
+            extra.anchor.set(0.5, 0.5);
 
             // game.add.sprite(300, 300, 'jet');
 
@@ -49,13 +56,14 @@
 
             coins = game.add.group()
 
+            coin_sound = game.add.audio('coin_touch')
+
             for (let i = 0; i < 10; i++) {
                 coin = coins.create(game.rnd.between(0, window.innerWidth), game.rnd.between(0, window.innerHeight), 'coin');
                 coin.anchor.set(0.5, 0.5);
 
-
                 game.physics.arcade.enable(coin);
-                coin.body.mass = -10;
+
                 console.log(coin);
             }
 
@@ -69,7 +77,7 @@
             // player.x = game.input.x;
             // player.y = game.input.y;
 
-            game.physics.arcade.collide(player, coins, handler, processer, this);
+            game.physics.arcade.overlap(player, coins, handler, processer, this);
 
 
             player.body.velocity.x = 4 * (game.input.x - player.x);
@@ -77,7 +85,8 @@
 
             space.tilePosition.y += 5;
 
-            degree = Math.atan((game.input.y - player.y) / (game.input.x - player.x)) * 180 / Math.PI + 90;
+            //degree = Math.atan((game.input.y - player.y) / (game.input.x - player.x)) * 180 / Math.PI + 90;
+            degree = Math.atan2((game.input.y - player.y), (game.input.x - player.x)) * 180 / Math.PI + 90;
 
             player.angle = degree;
         }
@@ -97,6 +106,8 @@
 
             c.x = game.rnd.between(0, window.innerWidth);
             c.y = game.rnd.between(0, window.innerHeight);
+
+            coin_sound.play();
         }
 
     </script>
