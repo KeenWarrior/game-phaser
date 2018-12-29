@@ -29,12 +29,18 @@
         var coin_sound;
 
         var cursors;
+        
+        var score_text;
+
+        var woman;
 
         function preload() {
             game.load.image('jet', 'jet.png');
             game.load.image('space', 'starfield.png')
             game.load.image('coin', 'coin.png')
             game.load.audio('coin_touch', 'metal.wav')
+
+            game.load.spritesheet('woman', 'sheet.png', 189, 230, 14);
         }
 
         function create() {
@@ -53,7 +59,7 @@
             player.scale.setTo(2);
 
             extra = game.add.sprite(0, 0, 'jet');
-            extra.anchor.set(0.5, 0.5);
+            extra.anchor.set(0, 0);
 
             // game.add.sprite(300, 300, 'jet');
 
@@ -76,7 +82,16 @@
 
             console.log(player);
 
+            score_text = game.add.text(100, 100, "Score : 0", {font: "65px Arial", fill : "#fff"})
 
+
+            woman = game.add.sprite(200, 200, 'woman');
+            woman.animations.add('naach')
+
+            woman.animations.play('naach', 14, true);
+
+            game.physics.arcade.enable(woman);
+            woman.body.velocity.x = 50;
 
         }
 
@@ -85,7 +100,7 @@
             // player.y = game.input.y;
 
             game.physics.arcade.overlap(player, coins, handler, processer, this);
-            game.physics.arcade.collide(bullets, coins, bullet_check, bullet_process, this);
+            game.physics.arcade.overlap(bullets, coins, bullet_check, bullet_process, this);
 
 
             player.body.velocity.x = 4 * (game.input.x - player.x);
@@ -97,6 +112,8 @@
             degree = Math.atan2((game.input.y - player.y), (game.input.x - player.x)) * 180 / Math.PI + 90;
 
             player.angle = degree;
+
+            score_text.setText("Score : " + score)
         }
 
         function render() {
@@ -105,8 +122,6 @@
                 bullet.scale.x = bullet.scale.x + .01;
                 bullet.scale.y = bullet.scale.y + .01;
             });
-
-            game.debug.text("scores : " + score, 100, 100)
 
             if(cursors.up.isDown){
                 shoot();
@@ -153,8 +168,8 @@
 
         function bullet_process(b, c){
             score++;
-            // c.x = game.rnd.between(0, window.innerWidth);
-            // c.y = game.rnd.between(0, window.innerHeight);
+            c.x = game.rnd.between(0, window.innerWidth);
+            c.y = game.rnd.between(0, window.innerHeight);
         }
 
     </script>
