@@ -22,9 +22,13 @@
 
         var coins;
 
+        var bullets;
+
         var score = 0;
 
         var coin_sound;
+
+        var cursors;
 
         function preload() {
             game.load.image('jet', 'jet.png');
@@ -39,6 +43,7 @@
 
             console.log(game)
 
+            cursors = game.input.keyboard.createCursorKeys();
 
 
             space = game.add.tileSprite(0, 0, window.innerWidth, window.innerHeight, 'space')
@@ -55,6 +60,7 @@
             game.physics.arcade.enable(player);
 
             coins = game.add.group()
+            bullets = game.add.group()
 
             coin_sound = game.add.audio('coin_touch')
 
@@ -93,6 +99,22 @@
 
         function render() {
             game.debug.text("scores : " + score, 100, 100)
+
+            if(cursors.up.isDown){
+                shoot();
+            }
+            
+            // console.log(player.angle)
+        }
+
+        function shoot(){
+            bullet = bullets.create(player.x, player.y, 'coin');
+            bullet.anchor.set(0.5, 0.5);
+            bullet.scale.setTo(.2);
+            game.physics.arcade.enable(bullet);
+
+            bullet.body.velocity.x = 1000 * Math.cos((player.angle - 90) * Math.PI / 180)
+            bullet.body.velocity.y = 1000 * Math.sin((player.angle - 90) * Math.PI / 180)
         }
 
         function handler(p, c) {
@@ -107,7 +129,7 @@
             c.x = game.rnd.between(0, window.innerWidth);
             c.y = game.rnd.between(0, window.innerHeight);
 
-            coin_sound.play();
+            // coin_sound.play();
         }
 
     </script>
