@@ -17,6 +17,11 @@ class PlayScene extends Phaser.Scene{
 
         var map = this.add.tilemap("map");
 
+        var tileset = map.addTilesetImage("jungle_tiles", "tile_image");
 
+        var layer = map.createStaticLayer("main", tileset);
+        console.log(map);
+
+        
     }
 }
